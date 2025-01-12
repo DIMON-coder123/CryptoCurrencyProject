@@ -1,4 +1,4 @@
-import {Menu, Spin} from 'antd';
+import {Button, Divider, Menu, Space, Spin} from 'antd';
 import axios from "axios";
 import {useEffect, useState} from "react";
 import CurrencyCard from "./components/CurrencyCard.jsx";
@@ -55,15 +55,19 @@ const App = () => {
 
 
     const onClick = (e) => {
-        console.log('click ', e);
         setCurrencyId(e.key)
     };
-    console.log(currencyInfo)
     return (
-        <div >
-            <div>
-                NAVBAR
+        <div>
+            <div className="flex justify-end my-0.5 mx-3">
+                <Space className="flex items-center">
+                    <Button color="primary" variant="filled" >Log in</Button>
+                    <Button type="primary" variant="filled">Sign up</Button>
+
+                </Space>
             </div>
+            <Divider style={{borderColor: "#91caff"}}></Divider>
+
             <div className="flex">
                 <Menu
                     onClick={onClick}
