@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from src.CMC_router import router as router_crypto
+from src.login_router import router as login_crypto
 from fastapi.middleware.cors import CORSMiddleware
+
+
 app = FastAPI()
 
 origins = [
@@ -18,4 +21,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(router_crypto)
-
+app.include_router(login_crypto)
