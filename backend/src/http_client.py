@@ -13,7 +13,7 @@ class HTTPClient:
 
 
 class CMCHTTPClient(HTTPClient):
-    async def get_currency_list(self):
+    async def get_all_currency(self):
         async with self._session.get('/v1/cryptocurrency/listings/latest') as response:
             listening = await response.json()
             return listening["data"]
@@ -24,3 +24,6 @@ class CMCHTTPClient(HTTPClient):
                                      params = {"id": currency_id,}) as response:
             listening = await response.json()
             return listening["data"][str(currency_id)]
+
+
+

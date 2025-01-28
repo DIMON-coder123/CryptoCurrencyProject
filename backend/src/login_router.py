@@ -2,6 +2,7 @@ from fastapi import HTTPException, APIRouter, Response
 from src.models.models import UserRegisterSchema, UserLoginSchema
 from src.JWT_settings import security, config
 from src.db.db import connection
+from src.logger import logger
 router = APIRouter(
     tags=["authorization"],
 )
@@ -9,35 +10,33 @@ router = APIRouter(
 conn = connection()
 cur = conn.cursor()
 
-# def main():
-#
-#     cur.execute("""SELECT * FROM users WHERE email = 'user@example.com';""")
-#     for row in cur.fetchall():
-#         print(row)
 
 @router.post("/registration", summary="registration form")
-async def registration(creds: UserRegisterSchema, response: Response):
+async def registration(creds: UserRegisterSchema):
     cur.execute("""SELECT * FROM users WHERE email = %s """, (creds.email, ))
     if cur.fetchone():
+        logger.exception('Email is already registered')
         raise HTTPException(status_code=401, detail="Email is already registered")
-
     try:
         cur.execute("""INSERT INTO users (name, surname, email, password) VALUES (%s, %s, %s, %s);""", (creds.name, creds.surname, creds.email, creds.password))
+        logger.info(f"User with email: {creds.email} successfully registered")
         conn.commit()
     except Exception:
         conn.rollback()
+        logger.exception('Wrong credentials')
         raise HTTPException(status_code=401, detail="Wrong credentials")
-
 
 
 
 @router.post("/login", summary="login form")
 async def login(creds: UserLoginSchema, response: Response):
-    if creds.email == "example@email.com" and creds.password == "test_test":
-        token = security.create_access_token(uid="12345")
+    cur.execute("""SELECT id FROM users WHERE email = %s AND password = %s""", (creds.email, creds.password))
+    if uid := cur.fetchone():
+        logger.info(f"User {creds.email} successfully logged in")
+        token = security.create_access_token(uid=f"{uid}")
+        logger.info(f"Create token: {token}")
         response.set_cookie(config.JWT_ACCESS_COOKIE_NAME, token)
-        return {"access token": token}
-    raise HTTPException(status_code=401, detail="Incorrect email or password")
-
-# if __name__ == "__main__":
-#     main()
+        return {"access token": uid}
+    else:
+        logger.exception(f"Wrong credentials by user: {creds.email}")
+        raise HTTPException(status_code=401, detail="Wrong credentials")
