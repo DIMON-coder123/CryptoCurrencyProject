@@ -10,3 +10,8 @@ class UserLoginSchema(BaseModel):
     email: EmailStr
     password: str = Field(min_length=8, max_length=24)
 
+
+class UserDeleteSchema(UserLoginSchema):
+    pass
+
+
