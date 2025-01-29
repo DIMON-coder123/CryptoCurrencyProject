@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from src.cmc_client import cmc_client
-from src.logger import logger
+from cmc_client import cmc_client
+
+from logger import logger
 router = APIRouter(
     prefix="/cryptocurrencies"
 )
