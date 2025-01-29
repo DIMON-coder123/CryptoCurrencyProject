@@ -1,8 +1,8 @@
 from fastapi import HTTPException, APIRouter, Response
-from src.models.models import UserRegisterSchema, UserLoginSchema
-from src.JWT_settings import security, config
-from src.db.db import connection
-from src.logger import logger
+from models.models import UserRegisterSchema, UserLoginSchema
+from JWT_settings import security, config
+from db.db import connection
+from logger import logger
 router = APIRouter(
     tags=["authorization"],
 )

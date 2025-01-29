@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from src.CMC_router import router as router_crypto
-from src.login_router import router as login_crypto
+from CMC_router import router as router_crypto
+from login_router import router as login_crypto
 from fastapi.middleware.cors import CORSMiddleware
-from src.logger import logger
+from logger import logger
 
 app = FastAPI()
 logger.info("Starting server")
