@@ -21,7 +21,7 @@ async def registration(creds: UserRegisterSchema):
         cur.execute("""INSERT INTO users (name, surname, email, password) VALUES (%s, %s, %s, %s);""", (creds.name, creds.surname, creds.email, creds.password))
         logger.info(f"User with email: {creds.email} successfully registered")
         conn.commit()
-    except Exception:
+    except:
         conn.rollback()
         logger.exception('Wrong credentials')
         raise HTTPException(status_code=401, detail="Wrong credentials")
